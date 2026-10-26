@@ -48,6 +48,13 @@ class Player {
   void displayPlayer() {
     // OPGAVE 4: Vælg hvilken figur (frameIndex) der skal vises: 1 når spilleren bevæger sig mod højre,
     // 2 når han bevæger sig mod venstre, og 0 når han står stille.
+    if (velocity.x > 0) {
+      frameIndex = 1;
+    } else if (velocity.x < 0) {
+      frameIndex = 2;
+    } else {
+      frameIndex = 0;
+    }
 
     PImage f = frames[frameIndex];
     imageMode(CENTER); // position er midten af figuren
@@ -68,11 +75,20 @@ class Player {
     // Nulstil først den vandrette fart, og brug så keyLeft, keyRight (sættes i spil.pde)
     // og runSpeed til at sætte velocity.x.
     // Spørgsmål: hvad sker der med din løsning, hvis begge taster holdes nede?
-
+    velocity.x = 0;
+    if (keyLeft && !keyRight) {
+      velocity.x = -runSpeed.x;
+    } else if (keyRight && !keyLeft) {
+      velocity.x = runSpeed.x;
+    }
     // OPGAVE 6: Hvis hop-tasten er trykket ned OG spilleren står på noget, skal han hoppe:
     // sæt den lodrette fart ud fra jumpSpeed (husk at op er negativ y i Processing),
     // og husk at han nu ikke længere står på noget.
 
+    if (keyJump && grounded) {
+      velocity.y = -jumpSpeed.y;
+      grounded = false;
+    }
     velocity.y += gravity;
 
     float halvH = frames[0].height * scale / 2;
@@ -107,6 +123,22 @@ class Player {
       grounded = true;
     }
   }
+  /*void keyPressed() {
+   if (key == 'a' || key == 'A') {
+   playerHastighedX = -5;
+   }
+   if (key == 'd'||key == 'D') {
+   playerHastighedX = 5;
+   }
+   if (key == 'w'||key == 'W') {
+   playerHastighedY = -12;
+   grounded = false;
+   }
+   }*/
+
+
+
+
 
   int getliv () {
     return liv;
@@ -172,8 +204,8 @@ class Player {
   void setRunSpeed(PVector r) {
     runSpeed = r.copy();
   }
-  
-  void setKeys(int k){
-   keys=k;
+
+  void setKeys(int k) {
+    keys=k;
   }
 }

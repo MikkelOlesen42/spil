@@ -36,22 +36,30 @@ class Pickup {
 
   void display() {
     // OPGAVE 7: Hvis pickup'en allerede er samlet op, skal den ikke tegnes. Stop metoden her i så fald.
-
-    if (img != null) {
-      imageMode(CENTER);
-      image(img, position.x, position.y);
-    } else {
-      // reserve: cirkel med første bogstav af typen
-      String type = getClass().getSimpleName();
-      fill(255, 200, 0);
-      circle(position.x, position.y, radius() * 2);
-      fill(0);
-      textAlign(CENTER, CENTER);
-      text(type.charAt(0), position.x, position.y);
+    if (pickedUp == false) {
+      if (img != null) {
+        imageMode(CENTER);
+        image(img, position.x, position.y);
+      } else {
+        // reserve: cirkel med første bogstav af typen
+        String type = getClass().getSimpleName();
+        fill(255, 200, 0);
+        circle(position.x, position.y, radius() * 2);
+        fill(0);
+        textAlign(CENTER, CENTER);
+        text(type.charAt(0), position.x, position.y);
+      }
     }
   }
 
   boolean touches(Player p) {
+    float spillerRadius = p.frames[0].width * p.scale / 2;
+
+    if (!pickedUp && position.dist(p.position) < (spillerRadius + radius()) * 0.5) {
+      return true;
+    } else {
+      return false;
+    }
     // OPGAVE 8: Returner true hvis spilleren rører pickup'en, ellers false.
     // - En pickup der allerede er samlet op, kan ikke røres.
     // - Spillerens radius er halvdelen af bredden på p.frames[0] gange p.scale.
